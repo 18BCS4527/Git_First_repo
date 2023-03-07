@@ -1,0 +1,17 @@
+														Working on Git commands
+													===============================
+
+
+
+Day1:- Initializing git in local repo and working on basic commands 
+
+git config --global user.email <mail> ---- To config our git global user credential
+git config --global user.name <name>  ---- To config our git global user credential
+git init       		---		To initialize git 
+git branch -a  		---		To see the list of all branch (initialy master branch will be created when we do git init)
+git status			---		It gives the information about the chnages that are happen inside our repo  
+git add <filename>  ---     To add specific file into our commit 
+git add .			---		To add N no.of files into our commit 	
+git commit -m <mgs> ---		To commit the changes 		 
+
+
