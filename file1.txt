@@ -13,5 +13,5 @@ git status			---		It gives the information about the chnages that are happen ins
 git add <filename>  ---     To add specific file into our commit 
 git add .			---		To add N no.of files into our commit 	
 git commit -m <mgs> ---		To commit the changes 		 
-
+git log 			---		To see all the commit's in detail 
 
