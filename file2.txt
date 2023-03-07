@@ -12,3 +12,7 @@ git push -u origin master
 
 git branch -c <banchName>       ---     To create a branch 
 git checkout <branchName>       ---     to point our repo to that particular file structure
+
+Merge files between two branchs
+
+git merge <branchName>          ---     To merge the banchName
