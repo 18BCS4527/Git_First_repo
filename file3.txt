@@ -2,6 +2,3 @@ Looking at reverting the commits
 
 
 Let see the chanhges
-
-We have this line to keep and next to remove
-Here are some lines to revert
