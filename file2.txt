@@ -1,0 +1,14 @@
+Day1:- Working on code commits to git server and git branchs nd how it works 
+
+To perform any code commits to git server we should have our repo in git server
+Step 1: create a repo in git server manual in git hub
+Step 2: once done with creating repo follow the commands to move ur local code to the server
+Step 3: copy the https url to connect server repo 
+
+Commands:
+
+git remote add origin <httpsUrl>   
+git push -u origin master 
+
+git branch -c <banchName>       ---     To create a branch 
+git checkout <branchName>       ---     to point our repo to that particular file structure
