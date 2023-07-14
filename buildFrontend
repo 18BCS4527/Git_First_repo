@@ -38,3 +38,45 @@
         </plugin>
     </plugins>
 </build>
+
+
+
+import React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+
+// Define your data
+const rows = [
+  { id: 1, name: 'John Doe', age: 25 },
+  { id: 2, name: 'Jane Smith', age: 30 },
+  // More rows...
+];
+
+// Define the function to determine the row color dynamically
+const getRowColor = (params) => {
+  // Assuming you have some condition to determine the color dynamically
+  if (params.row.age < 30) {
+    return '#ff0000'; // Red color
+  }
+  return ''; // Default color (no styling)
+};
+
+const App = () => {
+  const columns = [
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'age', headerName: 'Age', width: 150 },
+    // More columns...
+  ];
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        getRowClassName={(params) => getRowColor(params)}
+      />
+    </div>
+  );
+};
+
+export default App;
+
