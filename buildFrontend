@@ -80,3 +80,34 @@ const App = () => {
 
 export default App;
 
+
+
+const convertToExcel = (jsonDataArray) => {
+  const workbook = XLSX.utils.book_new();
+
+  jsonDataArray.forEach((jsonData, index) => {
+    const worksheet = XLSX.utils.json_to_sheet(jsonData);
+
+    // Set the custom number format as text for all cells in the current sheet
+    const range = worksheet['!ref'];
+    const cellRange = XLSX.utils.decode_range(range);
+    for (let row = cellRange.s.r; row <= cellRange.e.r; row++) {
+      for (let col = cellRange.s.c; col <= cellRange.e.c; col++) {
+        const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+        const cell = worksheet[cellAddress];
+        if (cell && cell.t === 'n') {
+          cell.t = 's';
+          cell.z = '@';
+        }
+      }
+    }
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, `Sheet${index + 1}`);
+  });
+
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const excelData = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  saveAs(excelData, 'data.xlsx');
+};
+
+
