@@ -43,3 +43,46 @@ matches.forEach(match => {
     console.log(`Key: ${key}, Value: ${value}`);
 });
 
+
+
+
+
+
+
+const nlp = require('compromise');
+
+// Sample input
+const input = "Modify product as PRODUCTABCD and term to 6 months";
+
+// Define multiple patterns for extracting key-value pairs
+const patterns = [
+  "[verb] [noun] as [word] and [noun] to [word]",
+  "[verb] [noun] as [word] and [noun] to [value] [unit]"
+  // You can add more patterns here if needed
+];
+
+// Array to store key-value pairs
+const keyValuePairList = [];
+
+// Iterate through each pattern
+patterns.forEach(pattern => {
+  const results = nlp(input).match(pattern).out('json');
+  
+  // Extract key-value pairs from results and add to the list
+  results.forEach(result => {
+    const key = result.groups.word[0].text.toLowerCase();
+    const value = result.groups.word[1].text;
+    const unit = result.groups.unit ? result.groups.unit[0].text : '';
+
+    // Only push if the unit is not empty
+    if (unit !== '') {
+      keyValuePairList.push({ key, value, unit });
+    } else {
+      // Push without the unit if it's empty
+      keyValuePairList.push({ key, value });
+    }
+  });
+});
+
+console.log(keyValuePairList);
+
