@@ -1,99 +1,20 @@
 const nlp = require('compromise');
 
-function extractKeyValuePairs(sentence) {
-  const doc = nlp(sentence);
+// Input sentence
+const sentence = "Name is John and Age is 25";
 
-  // Find all nouns and terms
-  const nouns = doc.nouns().out('array');
-  const terms = doc.terms().out('array');
+// Load the sentence into Compromise
+const doc = nlp(sentence);
 
-  const keyValues = [];
-  let currentKey = null;
-  for (const term of terms) {
-    if (nouns.includes(term)) {
-      currentKey = term;
-    } else if (term.text() === 'as' && currentKey) {
-      const nextTerm = term.nextTerm();
-      if (nextTerm && nouns.includes(nextTerm)) {
-        keyValues.push({ key: currentKey.text(), value: nextTerm.text() });
-        currentKey = null;
-      }
-    }
-  }
+// Define a pattern to match "Key is Value" structure
+const pattern = "{key} is {value}";
 
-  return keyValues;
-}
+// Find matches based on the pattern
+const matches = doc.match(pattern);
 
-const userSentences = [
-  "Modify product as productaiml and name as dinesh",
-  "Update item to itemaiml and set owner as john",
-  "Change name to dinesh for product",
-  "Update product and nickname as secureloan and lending"
-  // Add more user sentences here
-];
-
-userSentences.forEach((sentence, index) => {
-  const keyValuePairs = extractKeyValuePairs(sentence);
-  console.log(`Sentence ${index + 1}:`);
-  keyValuePairs.forEach(pair => {
-    console.log(`  Key: ${pair.key}, Value: ${pair.value}`);
-  });
-})
-
-
-
-Working on Git commands
-													===============================
-
-
-
-Day1:- Initializing git in local repo and working on basic commands 
-
-git config --global user.email <mail> ---- To config our git global user credential
-git config --global user.name <name>  ---- To config our git global user credential
-git init       		---		To initialize git 
-git branch -a  		---		To see the list of all branch (initialy master branch will be created when we do git init)
-git status			---		It gives the information about the chnages that are happen inside our repo  
-git add <filename>  ---     To add specific file into our commit 
-git add .	
-
-
-
----		To add N no.of files into our commit 	
-git commit -m <mgs> ---		To commit the changes 		 
-git log 			---		To see all the commit's in detail 
-
-
-
-
-from transformers import T5ForConditionalGeneration, T5Tokenizer
-
-# Load the pretrained T5 model
-model_name = "t5-small"
-model = T5ForConditionalGeneration.from_pretrained(model_name)
-tokenizer = T5Tokenizer.from_pretrained(model_name)
-
-# User input: Query about API documentation
-user_query = "What are the parameters for the /users endpoint?"
-
-# Prepare API documentation details
-api_documentation = {
-    "/users": {
-        "parameters": ["id", "name"],
-        "response_formats": ["application/json"]
-        # Add more details as needed
-    }
-}
-
-# Prepare input for the model
-api_details = api_documentation.get("/users", {})
-query_with_api_details = f"generate response: {user_query} API details: {api_details}"
-input_ids = tokenizer.encode(query_with_api_details, return_tensors="pt")
-
-# Generate response
-with torch.no_grad():
-    output = model.generate(input_ids)
-
-# Decode and print the generated response
-response = tokenizer.decode(output[0], skip_special_tokens=True)
-print("Generated Response:", response)
+// Extract key-value pairs from matches
+matches.forEach(match => {
+    const key = match.groups().key.out('text');
+    const value = match.groups().value.out('text');
+    console.log(`Key: ${key}, Value: ${value}`);
+});
