@@ -1,4 +1,48 @@
-														Working on Git commands
+const nlp = require('compromise');
+
+function extractKeyValuePairs(sentence) {
+  const doc = nlp(sentence);
+
+  // Find all nouns and terms
+  const nouns = doc.nouns().out('array');
+  const terms = doc.terms().out('array');
+
+  const keyValues = [];
+  let currentKey = null;
+  for (const term of terms) {
+    if (nouns.includes(term)) {
+      currentKey = term;
+    } else if (term.text() === 'as' && currentKey) {
+      const nextTerm = term.nextTerm();
+      if (nextTerm && nouns.includes(nextTerm)) {
+        keyValues.push({ key: currentKey.text(), value: nextTerm.text() });
+        currentKey = null;
+      }
+    }
+  }
+
+  return keyValues;
+}
+
+const userSentences = [
+  "Modify product as productaiml and name as dinesh",
+  "Update item to itemaiml and set owner as john",
+  "Change name to dinesh for product",
+  "Update product and nickname as secureloan and lending"
+  // Add more user sentences here
+];
+
+userSentences.forEach((sentence, index) => {
+  const keyValuePairs = extractKeyValuePairs(sentence);
+  console.log(`Sentence ${index + 1}:`);
+  keyValuePairs.forEach(pair => {
+    console.log(`  Key: ${pair.key}, Value: ${pair.value}`);
+  });
+})
+
+
+
+Working on Git commands
 													===============================
 
 
