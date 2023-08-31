@@ -18,3 +18,28 @@ matches.forEach(match => {
     const value = match.groups().value.out('text');
     console.log(`Key: ${key}, Value: ${value}`);
 });
+
+
+
+
+const nlp = require('compromise');
+
+// Input sentence
+const sentence = "The temperature is 25 degrees Celsius.";
+
+// Load the sentence into Compromise
+const doc = nlp(sentence);
+
+// Define a general pattern to match key-value pairs
+const pattern = "{key} (is|are) {value}";
+
+// Find matches based on the pattern
+const matches = doc.match(pattern);
+
+// Extract key-value pairs from matches
+matches.forEach(match => {
+    const key = match.groups().key.out('text');
+    const value = match.groups().value.out('text');
+    console.log(`Key: ${key}, Value: ${value}`);
+});
+
