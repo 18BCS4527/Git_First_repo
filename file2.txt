@@ -23,3 +23,8 @@ patterns.forEach(pattern => {
         console.log(`Key: ${key}, Value: ${value}`);
     });
 });
+
+
+const sentence = "product to production as example";
+const words = sentence.split(/\b(?:to|as)\b/);
+console.log(words);
