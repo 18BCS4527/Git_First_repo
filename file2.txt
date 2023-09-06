@@ -52,3 +52,27 @@ function App() {
 }
 
 export default App;
+
+
+
+// Inside the components prop of DataGrid
+components={{
+  Row: (props) => (
+    <>
+      <div onClick={() => handleRowClick(props.row)} style={{ cursor: 'pointer' }}>
+        {props.row.name}
+        <ExpandMoreIcon // Display the expand icon
+          style={{ transform: expandedRowId === props.row.id ? 'rotate(180deg)' : 'rotate(0deg)' }}
+        />
+      </div>
+      {expandedRowId === props.row.id && (
+        <div>
+          {/* Customize your expanded row content here */}
+          <p>Age: {props.row.age}</p>
+          <p>City: {props.row.city}</p>
+        </div>
+      )}
+    </>
+  ),
+}}
+
