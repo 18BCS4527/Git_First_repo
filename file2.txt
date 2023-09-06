@@ -1,51 +1,54 @@
 import React, { useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 
-const Chat = () => {
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState('');
+const rows = [
+  { id: 1, name: 'John Doe', age: 30, city: 'New York' },
+  { id: 2, name: 'Jane Smith', age: 25, city: 'Los Angeles' },
+  // Add more rows as needed
+];
 
-  const sendMessage = () => {
-    if (message) {
-      setMessages([...messages, message]);
-      setMessage('');
-    }
-  };
+function App() {
+  const [expandedRowId, setExpandedRowId] = useState(null);
 
-  const chatContainerStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100vh',
-  };
+  const columns = [
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'age', headerName: 'Age', width: 100 },
+    { field: 'city', headerName: 'City', width: 150 },
+  ];
 
-  const messagesStyle = {
-    flexGrow: 1,
-    overflowY: 'scroll',
-  };
-
-  const inputBoxStyle = {
-    marginTop: 'auto',
-    display: 'flex',
-    alignItems: 'center',
+  const handleRowClick = (params) => {
+    // Toggle the expanded row when a row is clicked
+    setExpandedRowId((prevId) => (prevId === params.id ? null : params.id));
   };
 
   return (
-    <div style={chatContainerStyle}>
-      <div style={messagesStyle}>
-        {messages.map((msg, index) => (
-          <div key={index}>{msg}</div>
-        ))}
-      </div>
-      <div style={inputBoxStyle}>
-        <input
-          type="text"
-          placeholder="Type your message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button onClick={sendMessage}>Send</button>
-      </div>
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        onRowClick={handleRowClick}
+        isRowSelectable={(params) => false} // Disable row selection
+        rowHeight={50}
+        // Render the expanded row based on the selected row
+        components={{
+          Row: (props) => (
+            <>
+              <div onClick={() => handleRowClick(props.row)} style={{ cursor: 'pointer' }}>
+                {props.row.name}
+              </div>
+              {expandedRowId === props.row.id && (
+                <div>
+                  {/* Customize your expanded row content here */}
+                  <p>Age: {props.row.age}</p>
+                  <p>City: {props.row.city}</p>
+                </div>
+              )}
+            </>
+          ),
+        }}
+      />
     </div>
   );
-};
+}
 
-export default Chat;
+export default App;
