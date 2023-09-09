@@ -1,78 +1,42 @@
-import React, { useState } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import React from 'react';
 
-const rows = [
-  { id: 1, name: 'John Doe', age: 30, city: 'New York' },
-  { id: 2, name: 'Jane Smith', age: 25, city: 'Los Angeles' },
-  // Add more rows as needed
-];
+class DownloadButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      jsonData: {
+        // Your JSON data goes here
+        key1: 'value1',
+        key2: 'value2',
+        // ...
+      },
+    };
+  }
 
-function App() {
-  const [expandedRowId, setExpandedRowId] = useState(null);
+  // Function to trigger the download
+  handleDownload = () => {
+    const { jsonData } = this.state;
+    const data = JSON.stringify(jsonData);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
 
-  const columns = [
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'age', headerName: 'Age', width: 100 },
-    { field: 'city', headerName: 'City', width: 150 },
-  ];
+    // Create a hidden anchor element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json';
+    document.body.appendChild(a);
+    a.click();
 
-  const handleRowClick = (params) => {
-    // Toggle the expanded row when a row is clicked
-    setExpandedRowId((prevId) => (prevId === params.id ? null : params.id));
+    // Clean up
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        onRowClick={handleRowClick}
-        isRowSelectable={(params) => false} // Disable row selection
-        rowHeight={50}
-        // Render the expanded row based on the selected row
-        components={{
-          Row: (props) => (
-            <>
-              <div onClick={() => handleRowClick(props.row)} style={{ cursor: 'pointer' }}>
-                {props.row.name}
-              </div>
-              {expandedRowId === props.row.id && (
-                <div>
-                  {/* Customize your expanded row content here */}
-                  <p>Age: {props.row.age}</p>
-                  <p>City: {props.row.city}</p>
-                </div>
-              )}
-            </>
-          ),
-        }}
-      />
-    </div>
-  );
+  render() {
+    return (
+      <button onClick={this.handleDownload}>Download JSON</button>
+    );
+  }
 }
 
-export default App;
-
-
-
-// Inside the components prop of DataGrid
-components={{
-  Row: (props) => (
-    <>
-      <div onClick={() => handleRowClick(props.row)} style={{ cursor: 'pointer' }}>
-        {props.row.name}
-        <ExpandMoreIcon // Display the expand icon
-          style={{ transform: expandedRowId === props.row.id ? 'rotate(180deg)' : 'rotate(0deg)' }}
-        />
-      </div>
-      {expandedRowId === props.row.id && (
-        <div>
-          {/* Customize your expanded row content here */}
-          <p>Age: {props.row.age}</p>
-          <p>City: {props.row.city}</p>
-        </div>
-      )}
-    </>
-  ),
-}}
-
+export default DownloadButton;
