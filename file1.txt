@@ -1,88 +1,50 @@
-const nlp = require('compromise');
+import React, { useRef } from 'react';
+import Prism from 'prismjs';
+import 'prismjs/themes/prism.css'; // Import a Prism.js theme
+import 'prismjs/plugins/line-numbers/prism-line-numbers.css'; // If you want line numbers
+import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard'; // Import the copy-to-clipboard plugin
+import 'prismjs/components/prism-javascript'; // Replace 'javascript' with your desired language
 
-// Input sentence
-const sentence = "Name is John and Age is 25";
+// Import the Prism.js styles for the copy-to-clipboard button
+import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.css';
 
-// Load the sentence into Compromise
-const doc = nlp(sentence);
+// Your code snippet
+const codeSnippet = `// Your code goes here
+const message = "Hello, World!";
+console.log(message);`;
 
-// Define a pattern to match "Key is Value" structure
-const pattern = "{key} is {value}";
+const CodeBlock = () => {
+  const codeRef = useRef(null);
 
-// Find matches based on the pattern
-const matches = doc.match(pattern);
-
-// Extract key-value pairs from matches
-matches.forEach(match => {
-    const key = match.groups().key.out('text');
-    const value = match.groups().value.out('text');
-    console.log(`Key: ${key}, Value: ${value}`);
-});
-
-
-
-
-const nlp = require('compromise');
-
-// Input sentence
-const sentence = "The temperature is 25 degrees Celsius.";
-
-// Load the sentence into Compromise
-const doc = nlp(sentence);
-
-// Define a general pattern to match key-value pairs
-const pattern = "{key} (is|are) {value}";
-
-// Find matches based on the pattern
-const matches = doc.match(pattern);
-
-// Extract key-value pairs from matches
-matches.forEach(match => {
-    const key = match.groups().key.out('text');
-    const value = match.groups().value.out('text');
-    console.log(`Key: ${key}, Value: ${value}`);
-});
-
-
-
-
-
-
-
-const nlp = require('compromise');
-
-// Sample input
-const input = "Modify product as PRODUCTABCD and term to 6 months";
-
-// Define multiple patterns for extracting key-value pairs
-const patterns = [
-  "[verb] [noun] as [word] and [noun] to [word]",
-  "[verb] [noun] as [word] and [noun] to [value] [unit]"
-  // You can add more patterns here if needed
-];
-
-// Array to store key-value pairs
-const keyValuePairList = [];
-
-// Iterate through each pattern
-patterns.forEach(pattern => {
-  const results = nlp(input).match(pattern).out('json');
-  
-  // Extract key-value pairs from results and add to the list
-  results.forEach(result => {
-    const key = result.groups.word[0].text.toLowerCase();
-    const value = result.groups.word[1].text;
-    const unit = result.groups.unit ? result.groups.unit[0].text : '';
-
-    // Only push if the unit is not empty
-    if (unit !== '') {
-      keyValuePairList.push({ key, value, unit });
-    } else {
-      // Push without the unit if it's empty
-      keyValuePairList.push({ key, value });
+  // Function to handle the copy-to-clipboard action
+  const handleCopyClick = () => {
+    const codeElement = codeRef.current;
+    if (codeElement) {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(codeElement);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      document.execCommand('copy');
+      selection.removeAllRanges();
     }
-  });
-});
+  };
 
-console.log(keyValuePairList);
+  // Initialize Prism.js when the component mounts
+  React.useEffect(() => {
+    Prism.highlightAll();
+  }, []);
 
+  return (
+    <div>
+      <pre>
+        <code ref={codeRef} className="language-javascript">
+          {codeSnippet}
+        </code>
+      </pre>
+      <button onClick={handleCopyClick}>Copy to Clipboard</button>
+    </div>
+  );
+};
+
+export default CodeBlock;
