@@ -1,42 +1,49 @@
 import React from 'react';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
-class DownloadButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      jsonData: {
-        // Your JSON data goes here
-        key1: 'value1',
-        key2: 'value2',
-        // ...
-      },
-    };
-  }
-
-  // Function to trigger the download
-  handleDownload = () => {
-    const { jsonData } = this.state;
-    const data = JSON.stringify(jsonData);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    // Create a hidden anchor element to trigger the download
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'data.json';
-    document.body.appendChild(a);
-    a.click();
-
-    // Clean up
-    URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-  };
-
-  render() {
-    return (
-      <button onClick={this.handleDownload}>Download JSON</button>
-    );
-  }
+function RowDetail({ data }) {
+  return (
+    <div>
+      <p>Name: {data.name}</p>
+      <p>Age: {data.age}</p>
+      {/* Add more details as needed */}
+    </div>
+  );
 }
 
-export default DownloadButton;
+const rows = [
+  { id: 1, name: 'John', age: 30 },
+  { id: 2, name: 'Jane', age: 25 },
+  // Add more rows as needed
+];
+
+const columns = [
+  { field: 'name', headerName: 'Name', width: 150 },
+  { field: 'age', headerName: 'Age', width: 100 },
+  // Add more columns as needed
+];
+
+function App() {
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        detailPanel={[
+          {
+            render: (params) => (
+              <RowDetail data={params.data} />
+            ),
+            openIcon: <span>Open</span>,
+            closeIcon: <span>Close</span>,
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
