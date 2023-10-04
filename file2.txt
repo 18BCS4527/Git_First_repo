@@ -1,49 +1,10 @@
-import React from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-
-function RowDetail({ data }) {
-  return (
-    <div>
-      <p>Name: {data.name}</p>
-      <p>Age: {data.age}</p>
-      {/* Add more details as needed */}
-    </div>
-  );
-}
-
-const rows = [
-  { id: 1, name: 'John', age: 30 },
-  { id: 2, name: 'Jane', age: 25 },
-  // Add more rows as needed
-];
-
-const columns = [
-  { field: 'name', headerName: 'Name', width: 150 },
-  { field: 'age', headerName: 'Age', width: 100 },
-  // Add more columns as needed
-];
-
-function App() {
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        components={{
-          Toolbar: GridToolbar,
-        }}
-        detailPanel={[
-          {
-            render: (params) => (
-              <RowDetail data={params.data} />
-            ),
-            openIcon: <span>Open</span>,
-            closeIcon: <span>Close</span>,
-          },
-        ]}
-      />
-    </div>
-  );
-}
-
-export default App;
+WITH RECURSIVE date_range AS (
+  SELECT from_date AS date
+  FROM leaves
+  UNION ALL
+  SELECT DATE_ADD(date, INTERVAL 1 DAY)
+  FROM date_range
+  WHERE DATE_ADD(date, INTERVAL 1 DAY) <= (SELECT to_date FROM leaves)
+)
+SELECT date
+FROM date_range;
