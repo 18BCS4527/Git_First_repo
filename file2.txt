@@ -8,3 +8,19 @@ WITH RECURSIVE date_range AS (
 )
 SELECT date
 FROM date_range;
+
+
+DELIMITER //
+CREATE PROCEDURE GetDateRange()
+BEGIN
+  DECLARE start_date DATE;
+  DECLARE end_date DATE;
+  SET start_date = (SELECT from_date FROM leaves);
+  SET end_date = (SELECT to_date FROM leaves);
+
+  WHILE start_date <= end_date DO
+    INSERT INTO date_range (date) VALUES (start_date);
+    SET start_date = DATE_ADD(start_date, INTERVAL 1 DAY);
+  END WHILE;
+END //
+DELIMITER ;
