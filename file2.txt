@@ -1,4 +1,18 @@
-WITH RECURSIVE date_range AS (
+CREATE PROCEDURE GetDateRange
+AS
+BEGIN
+  DECLARE @start_date DATE;
+  DECLARE @end_date DATE;
+  SET @start_date = (SELECT from_date FROM leaves);
+  SET @end_date = (SELECT to_date FROM leaves);
+
+  WHILE @start_date <= @end_date
+  BEGIN
+    INSERT INTO date_range (date) VALUES (@start_date);
+    SET @start_date = DATEADD(DAY, 1, @start_date);
+  END;
+END;
+ RECURSIVE date_range AS (
   SELECT from_date AS date
   FROM leaves
   UNION ALL
@@ -24,3 +38,7 @@ BEGIN
   END WHILE;
 END //
 DELIMITER ;
+
+
+
+
