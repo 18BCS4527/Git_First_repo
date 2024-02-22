@@ -1,44 +1,68 @@
-CREATE PROCEDURE GetDateRange
-AS
-BEGIN
-  DECLARE @start_date DATE;
-  DECLARE @end_date DATE;
-  SET @start_date = (SELECT from_date FROM leaves);
-  SET @end_date = (SELECT to_date FROM leaves);
+import { Component } from '@angular/core';
 
-  WHILE @start_date <= @end_date
-  BEGIN
-    INSERT INTO date_range (date) VALUES (@start_date);
-    SET @start_date = DATEADD(DAY, 1, @start_date);
-  END;
-END;
- RECURSIVE date_range AS (
-  SELECT from_date AS date
-  FROM leaves
-  UNION ALL
-  SELECT DATE_ADD(date, INTERVAL 1 DAY)
-  FROM date_range
-  WHERE DATE_ADD(date, INTERVAL 1 DAY) <= (SELECT to_date FROM leaves)
-)
-SELECT date
-FROM date_range;
+@Component({
+  selector: 'app-popover',
+  templateUrl: './popover.component.html',
+  styleUrls: ['./popover.component.css']
+})
+export class PopoverComponent {
+
+  constructor() { }
+
+}
+
+HTML
+
+<!-- Button trigger popover -->
+<button type="button" class="btn btn-secondary" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">
+  Click to toggle popover
+</button>
+
+<!-- Popover component -->
+<div class="popover" role="tooltip">
+  <div class="popover-header">
+    Popover Component
+  </div>
+  <div class="popover-body">
+    <app-navbar></app-navbar> <!-- Include navbar component -->
+  </div>
+</div>
+```
+
+app-navbar
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css']
+})
+export class NavbarComponent {
+
+  constructor() { }
+
+}
 
 
-DELIMITER //
-CREATE PROCEDURE GetDateRange()
-BEGIN
-  DECLARE start_date DATE;
-  DECLARE end_date DATE;
-  SET start_date = (SELECT from_date FROM leaves);
-  SET end_date = (SELECT to_date FROM leaves);
 
-  WHILE start_date <= end_date DO
-    INSERT INTO date_range (date) VALUES (start_date);
-    SET start_date = DATE_ADD(start_date, INTERVAL 1 DAY);
-  END WHILE;
-END //
-DELIMITER ;
+html
 
-
-
-
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Register</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
