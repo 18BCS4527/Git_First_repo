@@ -1,0 +1,23 @@
+import React, { useState } from "react";
+import { Grid, Typography } from "@material-ui/core";
+
+const GridView = () => {
+  const [data, setData] = useState([
+    { label: "Name", value: "John Doe" },
+    { label: "Age", value: 30 },
+    { label: "Occupation", value: "Software Engineer" },
+  ]);
+
+  return (
+    <Grid container spacing={2}>
+      {data.map((item) => (
+        <Grid item xs={12} sm={6} md={4} key={item.label}>
+          <Typography variant="h6">{item.label}</Typography>
+          <Typography variant="body1">{item.value}</Typography>
+        </Grid>
+      ))}
+    </Grid>
+  );
+};
+
+export default GridView;
