@@ -1,40 +1,26 @@
-import { Component, Inject } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { LOCALE_ID } from '@angular/core';
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+@Pipe({
+  name: 'numberFormat'
 })
-export class AppComponent {
-  formattedNumber: string;
-  parsedNumber: number;
+export class NumberFormatPipe implements PipeTransform {
 
-  constructor(
-    private decimalPipe: DecimalPipe,
-    @Inject(LOCALE_ID) private locale: string
-  ) {
-    // Example usage
-    const originalNumber = 123256.98;
-    this.formattedNumber = this.formatToPortuguese(originalNumber);
-    this.parsedNumber = this.parseFromPortuguese(this.formattedNumber);
-  }
+  constructor(private decimalPipe: DecimalPipe) {}
 
-  formatToPortuguese(value: string | number): string {
+  transform(value: string | number, locale: string = 'pt'): string | null {
     if (typeof value === 'string') {
       // Remove any commas used as thousand separators
       value = value.replace(/,/g, '');
     }
-
     const parsedValue = parseFloat(value as string);
 
     if (isNaN(parsedValue)) {
-      return ''; // Return an empty string if the value cannot be parsed to a number
+      return null; // Return null if the value cannot be parsed to a number
     }
 
     // Format the parsed number according to the specified locale
-    return this.decimalPipe.transform(parsedValue, '1.2-2', this.locale) ?? '';
+    return this.decimalPipe.transform(parsedValue, '1.2-2', locale);
   }
 
   parseFromPortuguese(value: string): number {
