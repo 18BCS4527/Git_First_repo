@@ -1,42 +1,19 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+@import '~@angular/material/theming';
+@include mat-core();
 
-@Pipe({
-  name: 'numberFormat'
-})
-export class NumberFormatPipe implements PipeTransform {
+// Define a custom theme
+$custom-primary: mat-palette($mat-indigo);
+$custom-accent: mat-palette($mat-pink);
+$custom-warn: mat-palette($mat-red);
 
-  constructor(private decimalPipe: DecimalPipe) {}
+$custom-theme: mat-light-theme(
+  (
+    color: (
+      primary: $custom-primary,
+      accent: $custom-accent,
+      warn: $custom-warn,
+    )
+  )
+);
 
-  transform(value: string | number, locale: string = 'pt'): string | null {
-    if (typeof value === 'string') {
-      // Remove any commas used as thousand separators
-      value = value.replace(/,/g, '');
-    }
-    const parsedValue = parseFloat(value as string);
-
-    if (isNaN(parsedValue)) {
-      return null; // Return null if the value cannot be parsed to a number
-    }
-
-    // Format the parsed number according to the specified locale
-    return this.decimalPipe.transform(parsedValue, '1.2-2', locale);
-  }
-
-  parseFromPortuguese(value: string): number {
-    if (typeof value !== 'string') {
-      return NaN;
-    }
-
-    // Replace the Portuguese decimal separator (comma) with a dot
-    value = value.replace(/\./g, '').replace(/,/g, '.');
-
-    const parsedValue = parseFloat(value);
-
-    if (isNaN(parsedValue)) {
-      return NaN; // Return NaN if the value cannot be parsed to a number
-    }
-
-    return parsedValue;
-  }
-}
+@include angular-material-theme($custom-theme);
