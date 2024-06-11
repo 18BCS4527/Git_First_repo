@@ -1,19 +1,17 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { AppComponent } from './app.component';
+// data.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatToolbarModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+@Injectable({
+  providedIn: 'root'
 })
-export class AppModule { }
+export class DataService {
+  private dataUrl = 'assets/data.json'; // Path to your JSON file
+
+  constructor(private http: HttpClient) { }
+
+  getData(): Observable<any> {
+    return this.http.get<any>(this.dataUrl);
+  }
+}
