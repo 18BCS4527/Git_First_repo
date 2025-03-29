@@ -142,3 +142,41 @@ public class JavaParserExtractor {
 }
 
 
+
+
+
+import java.util.regex.*;
+
+public class RegexMethodExtractor {
+
+    public static String extractMethodCode(String javaCode, String methodName) {
+        String regex = "public\\s+.*\\s+" + methodName + "\\s*\\(.*\\)\\s*\\{([\\s\\S]*?)\\}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(javaCode);
+
+        if (matcher.find()) {
+            return "public " + methodName + "(...) {" + matcher.group(1) + "}";
+        }
+        return "Method not found";
+    }
+
+    public static void main(String[] args) {
+        // ✅ Java Code as String
+        String javaCode = """
+            public class OrderService {
+                public void validateOrder(int orderId) {
+                    if (orderId <= 0) {
+                        throw new IllegalArgumentException("Invalid Order ID");
+                    }
+                    System.out.println("Order is valid");
+                }
+                
+                public void processPayment() {
+                    System.out.println("Processing payment...");
+                }
+            }
+            """;
+
+        System.out.println(extractMethodCode(javaCode, "validateOrder"));
+    }
+}
