@@ -1,0 +1,43 @@
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class OpenAIClient {
+    public static void main(String[] args) {
+        try {
+            // Define the endpoint URL
+            URL url = new URL("https://openai-chilakam.openai.azure.com/your-endpoint-path");
+            
+            // Open a connection to the URL
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            
+            // Set the request method to POST
+            connection.setRequestMethod("POST");
+            
+            // Set the request headers
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Authorization", "Bearer YOUR_API_KEY");
+            
+            // Enable input and output streams
+            connection.setDoOutput(true);
+            
+            // Define the request body
+            String jsonInputString = "{\"key1\": \"value1\", \"key2\": \"value2\"}";
+            
+            // Write the request body to the output stream
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+            
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
+            
+            // Close the connection
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
