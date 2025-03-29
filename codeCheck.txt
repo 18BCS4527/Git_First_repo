@@ -1,1 +1,144 @@
+✅ Extract the Code for a Given Method
+
+import java.nio.file.*;
+import java.io.IOException;
+import java.util.regex.*;
+
+public class CodeExtractor {
+    public static String extractMethodCode(String filePath, String methodName) throws IOException {
+        String code = new String(Files.readAllBytes(Paths.get(filePath)));
+
+        // Regex to extract method code block
+        Pattern pattern = Pattern.compile(
+            "public .* " + methodName + "\\(.*?\\) \\{.*?\\}", Pattern.DOTALL
+        );
+        Matcher matcher = pattern.matcher(code);
+
+        return matcher.find() ? matcher.group(0) : "Method not found";
+    }
+
+    public static void main(String[] args) throws IOException {
+        String methodCode = extractMethodCode("src/main/java/com/example/service/OrderService.java", "validateOrder");
+        System.out.println(methodCode);
+    }
+}
+
+
+✅ API to Retrieve Execution Logs & Extract Code
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/execution")
+public class ExecutionController {
+
+    @GetMapping("/logs")
+    public List<Map<String, Object>> getExecutionLogs() {
+        return ExecutionTracker.getExecutionLogs();
+    }
+
+    @GetMapping("/method-code")
+    public String getMethodCode(@RequestParam String filePath, @RequestParam String methodName) throws IOException {
+        return CodeExtractor.extractMethodCode(filePath, methodName);
+    }
+}
+
+
+
+✅ Compare Execution Logs (Azure OpenAI)
+
+import com.azure.ai.openai.OpenAIClient;
+import com.azure.ai.openai.OpenAIClientBuilder;
+import com.azure.ai.openai.models.ChatCompletions;
+import com.azure.ai.openai.models.ChatMessage;
+import java.util.List;
+import java.util.Map;
+
+public class AzureExecutionAnalyzer {
+    private static final String AZURE_OPENAI_ENDPOINT = "https://your-openai-endpoint.openai.azure.com/";
+    private static final String AZURE_OPENAI_KEY = "your-api-key";
+
+    private final OpenAIClient client;
+
+    public AzureExecutionAnalyzer() {
+        this.client = new OpenAIClientBuilder()
+                .endpoint(AZURE_OPENAI_ENDPOINT)
+                .credential(new com.azure.core.credential.AzureKeyCredential(AZURE_OPENAI_KEY))
+                .buildClient();
+    }
+
+    public String analyzeExecutionFlow(List<Map<String, Object>> prevLogs, List<Map<String, Object>> currLogs) {
+        String prompt = "Analyze execution traces and detect flow inconsistencies:\n" +
+                        "Previous Execution Logs:\n" + prevLogs.toString() + "\n" +
+                        "Current Execution Logs:\n" + currLogs.toString() + "\n" +
+                        "Explain if execution order changed or if critical method calls are missing.";
+
+        ChatCompletions response = client.getChatCompletions("gpt-4",
+                List.of(new ChatMessage("system", "You are an expert in debugging Java execution flows."),
+                        new ChatMessage("user", prompt)));
+
+        return response.getChoices().get(0).getMessage().getContent();
+    }
+}
+
+
+
+5️⃣ Final API for Execution Flow Analysis
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/debug")
+public class ExecutionAnalysisController {
+    private final AzureExecutionAnalyzer aiAnalyzer = new AzureExecutionAnalyzer();
+
+    @GetMapping("/analyze")
+    public String analyzeExecutionFlow(@RequestParam String version) {
+        List<Map<String, Object>> prevLogs = ExecutionHistoryLoader.loadExecutionLogs(version, "previous");
+        List<Map<String, Object>> currLogs = ExecutionHistoryLoader.loadExecutionLogs(version, "current");
+
+        return aiAnalyzer.analyzeExecutionFlow(prevLogs, currLogs);
+    }
+}
+
+
+
+import com.github.javaparser.*;
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.*;
+import java.nio.file.*;
+import java.util.Optional;
+
+public class JavaParserExtractor {
+    public static String extractMethodCode(String className, String methodName) throws Exception {
+        Path rootPath = Paths.get("src/main/java");  // Root of your project
+        try (var files = Files.walk(rootPath)) {
+            for (var file : files.toList()) {
+                if (file.toString().endsWith(".java")) {
+                    CompilationUnit cu = StaticJavaParser.parse(file);
+                    Optional<ClassOrInterfaceDeclaration> classDecl = cu.getClassByName(className);
+                    if (classDecl.isPresent()) {
+                        for (MethodDeclaration method : classDecl.get().getMethods()) {
+                            if (method.getNameAsString().equals(methodName)) {
+                                return method.toString(); // Extracts full method code
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return "Method not found";
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.out.println(extractMethodCode("OrderService", "validateOrder"));
+    }
+}
+
 
