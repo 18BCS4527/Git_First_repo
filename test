@@ -1,16 +1,16 @@
 import { Button } from "@mui/material";
 
-function DoubleArrowButton() {
+function DoubleChevronButton() {
   return (
     <Button
       variant="contained"
       sx={{
         backgroundColor: "#1976d2",
         color: "white",
-        padding: "10px 40px",
+        padding: "10px 50px",
         position: "relative",
         clipPath:
-          "polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%)",
+          "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
         "&:hover": {
           backgroundColor: "#1565c0",
         },
@@ -21,4 +21,4 @@ function DoubleArrowButton() {
   );
 }
 
-export default DoubleArrowButton;
+export default DoubleChevronButton;
