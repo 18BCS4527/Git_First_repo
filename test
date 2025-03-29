@@ -1,95 +1,23 @@
-@RestController
-@RequestMapping("/postman")
-public class PostmanExecutionController {
+import { Button } from "@mui/material";
 
-    @Autowired
-    private TestResultRepository repository;
-
-    @PostMapping("/execute")
-    public ResponseEntity<String> executePostmanCollection(@RequestBody String collectionJson) {
-        try {
-            // Save the collection JSON to a temp file
-            Path tempFile = Files.createTempFile("postman_collection", ".json");
-            Files.write(tempFile, collectionJson.getBytes());
-
-            // Run Newman via ProcessBuilder
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                    "newman", "run", tempFile.toAbsolutePath().toString(),
-                    "--reporters", "json"
-            );
-            processBuilder.redirectErrorStream(true);
-            Process process = processBuilder.start();
-
-            // Capture output
-            String output = new String(process.getInputStream().readAllBytes());
-            int exitCode = process.waitFor();
-
-            // Parse Newman output and store results
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(output);
-            processAndStoreResults(jsonNode);
-
-            return ResponseEntity.ok("Collection executed successfully. Status: " + exitCode);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error executing collection: " + e.getMessage());
-        }
-    }
-
-    private void processAndStoreResults(JsonNode newmanReport) {
-        for (JsonNode run : newmanReport.get("run").get("executions")) {
-            TestResult result = new TestResult();
-            result.setRequestUrl(run.get("item").get("request").get("url").asText());
-            result.setMethod(run.get("item").get("request").get("method").asText());
-            result.setRequestBody(run.get("request").get("body") != null ? run.get("request").get("body").asText() : null);
-            result.setResponseCode(run.get("response").get("code").asInt());
-            result.setResponseBody(run.get("response").get("body").asText());
-            result.setStatus(run.get("assertions").findValue("error") == null ? "Passed" : "Failed");
-
-            List<String> errors = new ArrayList<>();
-            for (JsonNode assertion : run.get("assertions")) {
-                if (assertion.has("error")) {
-                    errors.add(assertion.get("error").get("message").asText());
-                }
-            }
-            result.setAssertions(errors.toString());
-
-            repository.save(result);
-        }
-    }
+function ArrowButton() {
+  return (
+    <Button
+      variant="contained"
+      sx={{
+        backgroundColor: "#1976d2",
+        color: "white",
+        padding: "10px 30px",
+        position: "relative",
+        clipPath: "polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%)",
+        "&:hover": {
+          backgroundColor: "#1565c0",
+        },
+      }}
+    >
+      Next
+    </Button>
+  );
 }
 
-
-
-
-
-
-
-@Entity
-@Data
-public class TestResult {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String requestUrl;
-    private String method;
-    private String requestBody;
-    private int responseCode;
-    private String responseBody;
-    private String status;
-    private String assertions;
-    private LocalDateTime timestamp = LocalDateTime.now();
-}
-
-
-
-CREATE TABLE test_results (
-    id SERIAL PRIMARY KEY,
-    request_url TEXT,
-    method VARCHAR(10),
-    request_body TEXT,
-    response_code INT,
-    response_body TEXT,
-    status VARCHAR(10),
-    assertions TEXT,
-    timestamp TIMESTAMP DEFAULT NOW()
-);
+export default ArrowButton;
