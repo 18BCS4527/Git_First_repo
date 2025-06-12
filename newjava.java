@@ -25,3 +25,11 @@ public class OAuthClientConfig {
         return template;
     }
 }
+
+
+
+
+cmp.oauth.client.client-id=dsuser
+cmp.oauth.client.client-secret=your-secret
+cmp.oauth.client.access-token-uri=https://sat-stg.codebig2.net/v2/ws/token.oauth2
+cmp.oauth.client.scope=cmp:preferences:write
