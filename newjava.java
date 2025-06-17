@@ -1,51 +1,64 @@
-class Preference {
-    private List<ServiceInterruption> service_interruptions;
-    private List<AccountIdentity> account_identity;
-    private List<Billing> billing;
-    private List<Appointment> appointments;
-    private List<CustomerSupport> customer_support;
-    private List<Survey> survey;
+class ServiceInterruption {
+    private NetworkMaintenanceServiceImpacts network_maintenance_service_impacts;
+    private Outages outages;
 
     // Getters and Setters
-    public List<ServiceInterruption> getService_interruptions() {
-        return service_interruptions;
+    public NetworkMaintenanceServiceImpacts getNetwork_maintenance_service_impacts() {
+        return network_maintenance_service_impacts;
     }
-    public void setService_interruptions(List<ServiceInterruption> service_interruptions) {
-        this.service_interruptions = service_interruptions;
-    }
-
-    public List<AccountIdentity> getAccount_identity() {
-        return account_identity;
-    }
-    public void setAccount_identity(List<AccountIdentity> account_identity) {
-        this.account_identity = account_identity;
+    public void setNetwork_maintenance_service_impacts(NetworkMaintenanceServiceImpacts network_maintenance_service_impacts) {
+        this.network_maintenance_service_impacts = network_maintenance_service_impacts;
     }
 
-    public List<Billing> getBilling() {
-        return billing;
+    public Outages getOutages() {
+        return outages;
     }
-    public void setBilling(List<Billing> billing) {
-        this.billing = billing;
+    public void setOutages(Outages outages) {
+        this.outages = outages;
     }
+}
 
-    public List<Appointment> getAppointments() {
-        return appointments;
-    }
-    public void setAppointments(List<Appointment> appointments) {
-        this.appointments = appointments;
-    }
+class NetworkMaintenanceServiceImpacts {
+    private String email;
+    private String sms;
+    private String quiet_hours;
 
-    public List<CustomerSupport> getCustomer_support() {
-        return customer_support;
+    // Getters and Setters
+    public String getEmail() {
+        return email;
     }
-    public void setCustomer_support(List<CustomerSupport> customer_support) {
-        this.customer_support = customer_support;
+    public void setEmail(String email) {
+        this.email = email;
     }
+    public String getSms() {
+        return sms;
+    }
+    public void setSms(String sms) {
+        this.sms = sms;
+    }
+    public String getQuiet_hours() {
+        return quiet_hours;
+    }
+    public void setQuiet_hours(String quiet_hours) {
+        this.quiet_hours = quiet_hours;
+    }
+}
 
-    public List<Survey> getSurvey() {
-        return survey;
+class Outages {
+    private String sms;
+    private String quiet_hours;
+
+    // Getters and Setters
+    public String getSms() {
+        return sms;
     }
-    public void setSurvey(List<Survey> survey) {
-        this.survey = survey;
+    public void setSms(String sms) {
+        this.sms = sms;
+    }
+    public String getQuiet_hours() {
+        return quiet_hours;
+    }
+    public void setQuiet_hours(String quiet_hours) {
+        this.quiet_hours = quiet_hours;
     }
 }
