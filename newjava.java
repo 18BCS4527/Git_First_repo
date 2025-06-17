@@ -1,120 +1,75 @@
-{
-	"personId": "6100443d-4307-4ad9-b5c9-d6efd48e46e7001",
-	"preferences": [
-		{
-			"service_interruptions": [
-				{
-					"network_maintenance_service_impacts": {
-						"email": "OPTED_IN",
-						"quiet_hours": "OPTED_OUT",
-						"sms": "OPTED_IN"
-					}
-				},
-				{
-					"outages": {
-						"quiet_hours": "OPTED_OUT",
-						"sms": "OPTED_IN"
-					}
-				}
-			]
-		},
-		{
-			"account_identity": [
-				{
-					"change_to_account": {
-						"sms": "OPTED_IN",
-						"email": "OPTED_IN"
-					}
-				},
-				{
-					"security_alerts": {
-						"sms": "OPTED_IN",
-						"email": "OPTED_IN"
-					}
-				}
-			]
-		},
-		{
-			"billing": [
-				{
-					"autopay_reminder": {
-						"email": "OPTED_IN",
-						"sms": "OPTED_IN"
-					}
-				},
-				{
-					"payment_confirmation": {
-						"sms": "OPTED_IN",
-						"email": "OPTED_IN"
-					}
-				},
-				{
-					"bill_ready": {
-						"sms": "OPTED_IN",
-						"email": "OPTED_IN"
-					}
-				},
-				{
-					"on_demand_pay_per_view_purchases": {
-						"email": "OPTED_IN",
-						"sms": "OPTED_IN"
-					}
-				},
-				{
-					"xfinity_rewards": {
-						"sms": "OPTED_IN",
-						"email": "OPTED_IN"
-					}
-				}
-			]
-		},
-		{
-			"appointments": [
-				{
-					"technician_status_update": {
-						"email": "OPTED_IN",
-						"sms": "OPTED_IN"
-					}
-				},
-				{
-					"appointment_reminder_status_schedule": {
-						"email": "OPTED_IN",
-						"sms": "OPTED_IN"
-					}
-				}
-			]
-		},
-		{
-			"customer_support": [
-				{
-					"equipment_notifications": {
-						"sms": "OPTED_IN"
-					}
-				},
-				{
-					"transfer_service": {
-						"email": "OPTED_IN",
-						"sms": "OPTED_IN"
-					}
-				},
-				{
-					"change_of_plan": {
-						"email": "OPTED_IN",
-						"sms": "OPTED_IN"
-					}
-				}
-			]
-		},
-		{
-			"survey": [
-				{
-					"customer_satisfaction_survey": {
-						"email": "OPTED_IN",
-						"sms": "OPTED_IN"
-					}
-				}
-			]
-		}
-	],
-	"timestamp": "2025-06-15T13:33:23.0412285Z"
+import java.util.List;
+import java.util.Map;
+
+public class PreferenceResponse {
+    private String personId;
+    private List<Preference> preferences;
+    private String timestamp;
+
+    // Getters and Setters
+    public String getPersonId() {
+        return personId;
+    }
+    public void setPersonId(String personId) {
+        this.personId = personId;
+    }
+    public List<Preference> getPreferences() {
+        return preferences;
+    }
+    public void setPreferences(List<Preference> preferences) {
+        this.preferences = preferences;
+    }
+    public String getTimestamp() {
+        return timestamp;
+    }
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+}
+
+class Preference {
+    private List<Map<String, Map<String, String>>> service_interruptions;
+    private List<Map<String, Map<String, String>>> account_identity;
+    private List<Map<String, Map<String, String>>> billing;
+    private List<Map<String, Map<String, String>>> appointments;
+    private List<Map<String, Map<String, String>>> customer_support;
+    private List<Map<String, Map<String, String>>> survey;
+
+    // Getters and Setters
+    public List<Map<String, Map<String, String>>> getService_interruptions() {
+        return service_interruptions;
+    }
+    public void setService_interruptions(List<Map<String, Map<String, String>>> service_interruptions) {
+        this.service_interruptions = service_interruptions;
+    }
+    public List<Map<String, Map<String, String>>> getAccount_identity() {
+        return account_identity;
+    }
+    public void setAccount_identity(List<Map<String, Map<String, String>>> account_identity) {
+        this.account_identity = account_identity;
+    }
+    public List<Map<String, Map<String, String>>> getBilling() {
+        return billing;
+    }
+    public void setBilling(List<Map<String, Map<String, String>>> billing) {
+        this.billing = billing;
+    }
+    public List<Map<String, Map<String, String>>> getAppointments() {
+        return appointments;
+    }
+    public void setAppointments(List<Map<String, Map<String, String>>> appointments) {
+        this.appointments = appointments;
+    }
+    public List<Map<String, Map<String, String>>> getCustomer_support() {
+        return customer_support;
+    }
+    public void setCustomer_support(List<Map<String, Map<String, String>>> customer_support) {
+        this.customer_support = customer_support;
+    }
+    public List<Map<String, Map<String, String>>> getSurvey() {
+        return survey;
+    }
+    public void setSurvey(List<Map<String, Map<String, String>>> survey) {
+        this.survey = survey;
+    }
 }
